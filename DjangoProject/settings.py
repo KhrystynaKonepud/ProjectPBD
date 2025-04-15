@@ -11,6 +11,27 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from mongoengine import connect
+from dotenv import load_dotenv
+import os
+
+# Завантажуємо .env файл, що містить налаштування
+load_dotenv()
+
+# Отримуємо значення змінної MONGODB_URI з .env файлу
+mongodb_uri = os.getenv("MONGODB_URI")
+
+# Перевірка, чи отримали правильну строку з .env файлу
+if mongodb_uri:
+    print("MongoDB URI successfully loaded.")
+else:
+    print("Failed to load MongoDB URI from .env file.")
+
+# Підключення до MongoDB за допомогою отриманого URI
+connect(
+    db='Journal',  # Назва вашої бази даних (вона може бути різною)
+    host=mongodb_uri  # Використовуємо URI, що містить логін і пароль
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
