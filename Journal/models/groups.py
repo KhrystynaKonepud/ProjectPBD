@@ -8,8 +8,3 @@ class Group(Document):
 
     def __str__(self):
         return self.name
-
-
-Я люблю Христю🤍❤🖤
-Тасю я люблю теж 💖💖💖
-I LOVE NASTIA 🥰😍❤
