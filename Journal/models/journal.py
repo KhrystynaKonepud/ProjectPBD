@@ -2,14 +2,14 @@ from mongoengine import (
     Document, EmbeddedDocument, StringField, IntField, ListField, BooleanField,
     ReferenceField, EmbeddedDocumentField, DateField, FloatField
 )
-#from .student import Student
+from .students import Students
 from .lecturer import Lecturer
 from .subjects import Subjects
 from .groups import Groups
 
 # Студент у журналі
 class JournalStudent(EmbeddedDocument):
-    student_id = ReferenceField(Student, required=True)
+    student_id = ReferenceField(Students, required=True)
     name = StringField()
     grades = ListField(IntField(), default=[])
     comments = ListField(StringField(), default=[])
