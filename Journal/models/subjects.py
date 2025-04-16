@@ -3,7 +3,7 @@ from .lecturer import Lecturer
 from .group import Group
 
 
-class Discipline(Document):
+class Subjects(Document):
 
     name = StringField(required=True, unique=True)
     description = StringField()
