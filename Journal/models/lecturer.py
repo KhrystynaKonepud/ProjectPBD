@@ -6,7 +6,7 @@ class Lecturer(Document):
     email = EmailField(required=True, unique=True)
     password = StringField(required=True)
 
-    subjects = ListField(ReferenceField('Subjects'))  # або 'Subject', якщо ще не імпортований
+    subjects = ListField(ReferenceField('Subjects'))
     groups = ListField(ReferenceField('Groups'))
     created_journals = ListField(ReferenceField('Journal'))
 
