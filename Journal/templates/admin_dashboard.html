@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Панель адміністратора</title>
+</head>
+<body>
+    <h1>Вітаємо, {{ admin.name }}!</h1>
+    <p>Email: {{ admin.email }}</p>
+    <a href="{% url 'logout' %}">Вийти</a>
+</body>
+</html>
