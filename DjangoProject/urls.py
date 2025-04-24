@@ -1,7 +1,10 @@
 from django.contrib import admin
-from django.urls import path, include  # <- важливо
+from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('Journal.urls')),  # <- ДОДАЙ ЦЕ, якщо немає!
+    # Стандартну адмінку прибираємо, якщо вона більше не потрібна
+    # path('admin/', admin.site.urls),
+
+    # Усі маршрути твого застосунку
+    path('', include('Journal.urls')),
 ]
