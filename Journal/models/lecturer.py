@@ -1,11 +1,9 @@
 from mongoengine import Document, StringField, EmailField, ListField, ReferenceField
-from .models import Subjects, Groups, Journal
 
 class Lecturer(Document):
     name = StringField(required=True)
     email = EmailField(required=True, unique=True)
     password = StringField(required=True)
-
     role = StringField(required=True, default="lecturer")
 
     subjects = ListField(ReferenceField('Subjects'))
