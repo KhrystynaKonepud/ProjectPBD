@@ -7,8 +7,10 @@ from Journal.views.admin_views import (
     admin_subjects,
     admin_profile,
     edit_admin_profile,
+    admin_group_detail,
     user_detail,
-    add_user  # 🔧 Додано
+    add_user,
+    admin_add_group
 )
 from Journal.views.lecturer_views import lecturer_dashboard
 from Journal.views.student_views import student_dashboard
@@ -21,11 +23,16 @@ urlpatterns = [
 
     path('admin/dashboard/', admin_dashboard, name='admin_dashboard'),
     path('admin/users/', admin_users, name='admin_users'),
-    path('admin/groups/', admin_groups, name='manage_groups'),
+    path('admin/groups/', admin_groups, name='admin_groups'),
     path('admin/journals/', admin_journals, name='manage_journals'),
     path('admin/subjects/', admin_subjects, name='manage_subjects'),
     path('admin/profile/', admin_profile, name='admin_profile'),
     path('admin/edit/', edit_admin_profile, name='edit_admin_profile'),
+
+    path('admin/groups/add/', admin_add_group, name='add_group'),
+
+    path('admin/groups/<str:group_id>/', admin_group_detail, name='group_detail'),
+
 
     path('admin/user/<str:email>/', user_detail, name='user_detail'),
     path('admin/users/add/', add_user, name='add_user'),  # 🔧 Це маршрут на додавання
