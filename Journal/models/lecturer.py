@@ -6,7 +6,7 @@ class Lecturer(Document):
     password = StringField(required=True)
     role = StringField(required=True, default="lecturer")
 
-    subjects = ListField(ReferenceField('Subjects'))
+    subjects = ListField(ReferenceField('Subjects'), default=list, required=False)
     groups = ListField(ReferenceField('Groups'))
     created_journals = ListField(ReferenceField('Journal'))
 

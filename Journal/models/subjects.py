@@ -3,7 +3,7 @@ from mongoengine import Document, StringField, IntField, ListField, ReferenceFie
 class Subjects(Document):
     name = StringField(required=True, unique=True)
     description = StringField()
-    lecturer = ReferenceField('Lecturer', required=True)
+    lecturer = ListField(ReferenceField('Lecturer'))
     groups = ListField(ReferenceField('Groups'))
     hours = IntField()
     exam_type = StringField(choices=["Екзаменаційна", "Залікова", "Диференційований залік"])

@@ -10,7 +10,12 @@ from Journal.models.lecturer import Lecturer
 from Journal.models.admin import Admin
 from Journal.models.groups import Groups
 from django.contrib import messages
-
+from Journal.models.subjects import Subjects
+from mongoengine.errors import DoesNotExist
+from bson import ObjectId
+from bson.dbref import DBRef
+from mongoengine.base import get_document
+from mongoengine.queryset.visitor import Q
 
 
 
@@ -21,10 +26,94 @@ def admin_users(request):
     return render(request, 'admin_panel/users.html')
 
 def admin_journals(request):
-    return render(request, 'admin_journals.html')
+    return render(request, 'admin_panel/admin_journals.html')
+
+
+
+
 
 def admin_subjects(request):
-    return render(request, 'admin_subjects.html')
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        subject_id = request.POST.get('subject_id')
+
+        if action == 'delete' and subject_id:
+            try:
+                subject = Subjects.objects.get(id=subject_id)
+                subject.delete()
+            except Subjects.DoesNotExist:
+                pass  # можна додати повідомлення про помилку
+
+        return redirect('admin_subjects')  # name у urls.py
+
+    subjects = Subjects.objects.all()
+    return render(request, 'admin_panel/subjects.html', {'subjects': subjects})
+
+
+def admin_subject_detail(request, subject_id):
+    subject = Subjects.objects(id=subject_id).first()
+
+    if not subject:
+        return render(request, '404.html', status=404)
+
+    lecturer = subject.lecturer  # тут просто отримуємо викладача, БЕЗ fetch()
+
+    context = {
+        'subject': subject,
+        'lecturer': lecturer
+    }
+    return render(request, 'admin_panel/subject_detail.html', context)
+
+def admin_delete_subject(request, subject_id):
+    subject = Subjects.objects(id=subject_id).first()
+
+    if subject:
+        # Перед видаленням — видалити цей предмет у всіх викладачів
+        lecturers = subject.lecturer
+        for lecturer in lecturers:
+            if hasattr(lecturer, 'subjects') and lecturer.subjects:
+                updated_subjects = [subj for subj in lecturer.subjects if subj.id != subject.id]
+                lecturer.update(set__subjects=updated_subjects)  # ОНОВЛЮЄМО через update() щоб не видалявся список
+
+        # Тепер видаляємо саму дисципліну
+        subject.delete()
+
+    return redirect('admin_subjects')
+
+
+
+
+
+
+def admin_add_subject(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        lecturer_ids = request.POST.getlist('lecturers')  # важливо getlist()
+
+        lecturer_refs = [Lecturer.objects.get(id=lect_id) for lect_id in lecturer_ids]
+
+        new_subject = Subjects(
+            name=name,
+            description=description,
+            lecturer=lecturer_refs  # тепер тут список викладачів
+        )
+        new_subject.save()
+
+        # Додаємо цю дисципліну кожному викладачу
+        for lecturer in lecturer_refs:
+            if not hasattr(lecturer, 'subjects') or lecturer.subjects is None:
+                lecturer.subjects = []
+            lecturer.subjects.append(new_subject)
+            lecturer.save()
+
+        return redirect('admin_subjects')
+
+    lecturers = Lecturer.objects.all()
+    return render(request, 'admin_panel/add_subject.html', {'lecturers': lecturers})
+
+
+
 
 def admin_profile(request):
     if request.session.get('role') != 'admin':
