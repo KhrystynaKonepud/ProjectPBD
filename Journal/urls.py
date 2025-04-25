@@ -6,7 +6,8 @@ from Journal.views.admin_views import (
     admin_groups,
     admin_journals,
     admin_subjects,
-    admin_profile  # ← імпорт додано
+    admin_profile,  # ← імпорт додано
+    edit_admin_profile
 )
 from Journal.views.lecturer_views import lecturer_dashboard
 from Journal.views.student_views import student_dashboard
@@ -24,6 +25,8 @@ urlpatterns = [
     path('admin/journals/', admin_journals, name='manage_journals'),
     path('admin/subjects/', admin_subjects, name='manage_subjects'),
     path('admin/profile/', admin_profile, name='admin_profile'),  # ← новий маршрут
+    path('admin/edit/', edit_admin_profile, name='edit_admin_profile'),
+
 
     # Дашборди викладача та студента
     path('lecturer/dashboard/', lecturer_dashboard, name='lecturer_dashboard'),
