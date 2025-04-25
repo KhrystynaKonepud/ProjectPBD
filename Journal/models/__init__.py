@@ -1,2 +1,6 @@
 from .admin import Admin
-from .common import Students, Groups, Journal, JournalStudent, Lecturer, Subjects
+from .students import Students
+from .groups import Groups
+from .journal import Journal, JournalStudent
+from .lecturer import Lecturer
+from .subjects import Subjects

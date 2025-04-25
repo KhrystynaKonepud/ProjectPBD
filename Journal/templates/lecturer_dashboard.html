@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Кабінет викладача</title>
+</head>
+<body>
+    <h1>Вітаємо, {{ lecturer.name }}!</h1>
+    <p>Email: {{ lecturer.email }}</p>
+    <a href="{% url 'logout' %}">Вийти</a>
+</body>
+</html>
