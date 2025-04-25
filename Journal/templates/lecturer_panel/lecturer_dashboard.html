@@ -7,6 +7,11 @@
 <body>
     <h1>Вітаємо, {{ lecturer.name }}!</h1>
     <p>Email: {{ lecturer.email }}</p>
+
+    <p>
+        <a href="{% url 'create_journal' %}">➕ Створити новий журнал</a>
+    </p>
+
     <a href="{% url 'logout' %}">Вийти</a>
 </body>
 </html>

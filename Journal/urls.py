@@ -10,6 +10,7 @@ from Journal.views.admin_views import (
     edit_admin_profile
 )
 from Journal.views.lecturer_views import lecturer_dashboard
+from Journal.views.lecturer_views import create_journal
 from Journal.views.student_views import student_dashboard
 
 urlpatterns = [
@@ -30,5 +31,6 @@ urlpatterns = [
 
     # Дашборди викладача та студента
     path('lecturer/dashboard/', lecturer_dashboard, name='lecturer_dashboard'),
+    path('lecturer/create_journal/', create_journal, name='create_journal'),
     path('student/dashboard/', student_dashboard, name='student_dashboard'),
 ]
