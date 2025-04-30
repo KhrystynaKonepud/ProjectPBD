@@ -4,6 +4,7 @@ from Journal.models import Journal, JournalStudent, Groups, Students, Subjects
 from Journal.forms.journal_form import JournalForm
 from django.contrib import messages
 
+
 def lecturer_dashboard(request):
     lecturer_id = request.session.get('user_id')
     if not lecturer_id or request.session.get('role') != 'lecturer':
@@ -22,14 +23,13 @@ def create_journal(request):
         form = JournalForm(request.POST)
         if form.is_valid():
             try:
-                group_name = form.cleaned_data['group']
+                group_name   = form.cleaned_data['group']
                 subject_name = form.cleaned_data['subject']
 
-                group = Groups.objects.get(name=group_name)
-                subject = Subjects.objects.get(name=subject_name)
+                group    = Groups.objects.get(name=group_name)
+                subject  = Subjects.objects.get(name=subject_name)
                 lecturer = Lecturer.objects.get(id=lecturer_id)
 
-                # Якщо вам потрібно додавати студентів до журналу:
                 journal_students = []
                 for student in Students.objects(group=group):
                     journal_students.append(JournalStudent(
@@ -40,7 +40,7 @@ def create_journal(request):
                         total=0
                     ))
 
-                journal = Journal(
+                j = Journal(
                     lecturer=lecturer,
                     subject=subject,
                     group=group,
@@ -52,14 +52,14 @@ def create_journal(request):
                     comments_enabled=form.cleaned_data['comments_enabled'],
                     students=journal_students
                 )
-                journal.save()
-
+                j.save()
                 messages.success(request, "Журнал успішно створено!")
                 return redirect('lecturer_dashboard')
+
             except Groups.DoesNotExist:
-                form.add_error('group', 'Такої групи не існує')
+                form.add_error('group', "Такої групи не існує")
             except Subjects.DoesNotExist:
-                form.add_error('subject', 'Такого предмету не існує')
+                form.add_error('subject', "Такого предмету не існує")
             except Lecturer.DoesNotExist:
                 messages.error(request, "Викладача не знайдено. Спробуйте увійти ще раз.")
                 return redirect('login')
@@ -67,5 +67,7 @@ def create_journal(request):
         form = JournalForm()
 
     return render(request, 'lecturer_panel/create_journal.html', {'form': form})
+
+
 
 

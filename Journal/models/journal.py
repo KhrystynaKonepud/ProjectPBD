@@ -8,7 +8,7 @@ class JournalStudent(EmbeddedDocument):
     total = IntField(default=0)
 
 class Journal(Document):
-    lecturer_id = ReferenceField('Lecturer', required=True)
+    lecturer = ReferenceField('Lecturer', required=True)
     subject = ReferenceField('Subjects', required=True)
     group = ReferenceField('Groups', required=True)
     total_points = IntField(required=True)
