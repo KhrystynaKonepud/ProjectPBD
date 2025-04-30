@@ -2,21 +2,16 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Кабінет викладача</title>
+    <title>Мої журнали</title>
 </head>
 <body>
-    <h1>Вітаємо, {{ lecturer.name }}!</h1>
-    <p>Email: {{ lecturer.email }}</p>
-
     <nav>
         <a href="{% url 'lecturer_dashboard' %}">Головна</a> |
-        <a href="{% url 'create_journal' %}">➕ Створити новий журнал</a> |
+        <a href="{% url 'create_journal' %}">➕ Створити новий</a> |
         <a href="{% url 'logout' %}">Вийти</a>
     </nav>
 
-    <hr>
-
-    <h2>Мої журнали</h2>
+    <h1>Мої журнали</h1>
     <ul>
         {% for journal in journals %}
             <li>

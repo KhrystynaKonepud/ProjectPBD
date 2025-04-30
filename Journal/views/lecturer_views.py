@@ -3,6 +3,8 @@ from Journal.models.lecturer import Lecturer
 from Journal.models import Journal, JournalStudent, Groups, Students, Subjects
 from Journal.forms.journal_form import JournalForm
 from django.contrib import messages
+from django.http import Http404
+from bson import ObjectId
 
 
 def lecturer_dashboard(request):
@@ -11,7 +13,11 @@ def lecturer_dashboard(request):
         return redirect('login')
 
     lecturer = Lecturer.objects(id=lecturer_id).first()
-    return render(request, 'lecturer_panel/lecturer_dashboard.html', {'lecturer': lecturer})
+    journals = Journal.objects(lecturer=lecturer)
+    return render(request, 'lecturer_panel/lecturer_dashboard.html', {
+        'lecturer': lecturer,
+        'journals': journals
+    })
 
 
 def create_journal(request):
@@ -67,6 +73,69 @@ def create_journal(request):
         form = JournalForm()
 
     return render(request, 'lecturer_panel/create_journal.html', {'form': form})
+
+
+def list_journals(request):
+    """Список всіх журналів поточного викладача."""
+    lecturer_id = request.session.get('user_id')
+    if not lecturer_id or request.session.get('role') != 'lecturer':
+        return redirect('login')
+
+    lecturer = Lecturer.objects(id=lecturer_id).first()
+    journals = Journal.objects(lecturer=lecturer)
+
+    return render(request, 'lecturer_panel/lecturer_dashboard.html', {
+        'lecturer': lecturer,
+        'journals': journals,
+    })
+
+
+def view_journal(request, journal_id):
+    lecturer_id = request.session.get('user_id')
+    if not lecturer_id or request.session.get('role') != 'lecturer':
+        return redirect('login')
+
+    lecturer = Lecturer.objects(id=lecturer_id).first()
+    if not lecturer:
+        return redirect('login')
+
+    try:
+        journal = Journal.objects.get(id=ObjectId(journal_id), lecturer=lecturer)
+    except Journal.DoesNotExist:
+        raise Http404("Журнал не знайдено або у вас немає до нього доступу.")
+
+    # Підготовка списку сесій з об'єднаними даними
+    sessions = []
+    for i in range(len(journal.session_types)):
+        sessions.append({
+            'type': journal.session_types[i],
+            'max_points': journal.max_points_per_session[i] if i < len(journal.max_points_per_session) else None,
+            'deadline': journal.deadlines[i] if i < len(journal.deadlines) else None,
+            'penalty': journal.late_penalties[i] if i < len(journal.late_penalties) else None,
+        })
+
+    # Підготовка студентів з детальною інформацією по кожній сесії
+    students = []
+    for s in journal.students:
+        session_data = []
+        for i in range(len(s.grades)):
+            session_data.append({
+                'grade': s.grades[i],
+                'comment': s.comments[i] if i < len(s.comments) else '',
+                'max_point': journal.max_points_per_session[i] if i < len(journal.max_points_per_session) else '',
+            })
+        students.append({
+            'name': s.name,
+            'total': s.total,
+            'session_data': session_data,
+        })
+
+    return render(request, 'lecturer_panel/view_journal.html', {
+        'journal': journal,
+        'sessions': sessions,
+        'students': students,
+    })
+
 
 
 

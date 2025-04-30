@@ -17,6 +17,8 @@ from Journal.views.admin_views import (
 )
 from Journal.views.lecturer_views import lecturer_dashboard
 from Journal.views.lecturer_views import create_journal
+from Journal.views.lecturer_views import view_journal
+from Journal.views.lecturer_views import list_journals
 from Journal.views.student_views import student_dashboard
 from Journal.views.auth_views import index, universal_login, logout_view
 
@@ -51,5 +53,6 @@ urlpatterns = [
     path('admin/users/add/', add_user, name='add_user'),  # 🔧 Це маршрут на додавання
     path('lecturer/dashboard/', lecturer_dashboard, name='lecturer_dashboard'),
     path('lecturer/create_journal/', create_journal, name='create_journal'),
+    path('lecturer/journal/<str:journal_id>/', view_journal, name='view_journal'),
     path('student/dashboard/', student_dashboard, name='student_dashboard'),
 ]
