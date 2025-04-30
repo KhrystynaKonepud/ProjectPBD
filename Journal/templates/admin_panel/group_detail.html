@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ group.name }}</title>
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .section {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 14px;
+        }
+
+        .student {
+            background-color: #2b2b2b;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        form.inline {
+            display: inline;
+        }
+
+        .btn {
+            background-color: #ff4d4d;
+            color: white;
+            padding: 6px 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #e60000;
+        }
+
+        select, .btn-blue {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .btn-blue {
+            background-color: #3a2ff1;
+            color: white;
+            border: none;
+        }
+
+
+    .button-blue {
+        background-color: #3a2ff1;
+        color: white;
+        padding: 8px 14px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: bold;
+    }
+
+    .button-blue:hover {
+        background-color: #2a1fd9;
+    }
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-left">
+            <a href="{% url 'admin_groups' %}" class="button-blue">Назад</a>
+        </div>
+    </div>
+
+
+    <h1>Група: {{ group.name }}</h1>
+    <div class="section">
+        <h3>Студенти у групі:</h3>
+        {% for student in students %}
+            <div class="student">
+                <span>{{ student.name }}</span>
+                <form method="post" class="inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="student_id" value="{{ student.id }}">
+                    <input type="hidden" name="action" value="remove">
+                    <button class="btn" type="submit">Видалити</button>
+                </form>
+            </div>
+        {% empty %}
+            <p>Немає студентів у групі.</p>
+        {% endfor %}
+
+        <hr>
+        <h3>Додати студента до групи:</h3>
+        <form method="post">
+            {% csrf_token %}
+            <select name="student_id">
+                {% for student in all_students %}
+                    {% if student not in students %}
+                        <option value="{{ student.id }}">{{ student.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <input type="hidden" name="action" value="add">
+            <button type="submit" class="btn-blue">Додати</button>
+        </form>
+    </div>
+</body>
+</html>

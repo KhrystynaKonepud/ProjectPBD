@@ -9,7 +9,7 @@ class Students(Document):
     email = EmailField(required=True, unique=True)
     password = StringField(required=True)
 
-    group = ReferenceField('Groups', required=True)
+    group = ReferenceField('Groups', required=False, null=True)
     grades = ListField(EmbeddedDocumentField(GradeEntry), default=[])
     average = IntField(default=0)
 
