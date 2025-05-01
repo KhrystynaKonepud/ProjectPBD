@@ -1,0 +1,130 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Профіль адміністратора</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f0f0f;
+            font-family: Arial, sans-serif;
+            color: #fff;
+        }
+
+        .navbar {
+            background-color: #1e1e1e;
+            padding: 10px 30px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            background-color: #3a2ff1;
+            color: white;
+        }
+
+        .navbar a:hover {
+            background-color: #2a1fd9;
+        }
+
+        .main {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .profile-circle {
+            width: 120px;
+            height: 120px;
+            background-color: #3a2ff1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 0 auto 30px auto;
+        }
+
+        .info-box {
+            background-color: #1b1b1b;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin: 10px auto;
+            width: 300px;
+            text-align: left;
+            box-shadow: 0 0 10px rgba(255,255,255,0.05);
+        }
+
+        .info-box span {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .action-button {
+            margin-top: 30px;
+            background-color: #ffb300;
+            color: black;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .action-button:hover {
+            background-color: #ffa000;
+        }
+
+        .logout-button {
+            margin-top: 30px;
+            background-color: #f44336;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .logout-button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="{% url 'admin_dashboard' %}">На головну</a>
+    </div>
+
+    <div class="main">
+        <div class="profile-circle">Фото</div>
+
+    <div class="info-box">
+            <strong>ПІБ:</strong> {{ name }}
+        </div>
+        <div class="info-box">
+            <strong>Email:</strong> {{ email }}
+        </div>
+        <div class="info-box">
+            <strong>Password:</strong> ****
+        </div>
+
+        <a href="{% url 'edit_admin_profile' %}">
+            <button class="action-button">Редагувати профіль</button>
+        </a>
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-button">Вийти</button>
+        </form>
+    </div>
+</body>
+</html>
