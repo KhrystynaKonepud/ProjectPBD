@@ -1,168 +1,151 @@
-<!-- <!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <title>Інформація про журнал</title>
-</head>
-<body>
-    <h1>Інформація про журнал: {{ journal.subject.name }}</h1>
-    <p>Предмет: {{ journal.subject.name }}</p>
-    <p>Кількість студентів: {{ journal.students.count }}</p>
-    <p>Інші деталі: {{ journal.details }}</p>
-
-    
-    <a href="{% url 'student_dashboard' %}">Назад до кабінету студента</a>
-</body>
-</html> -->
 <!DOCTYPE html>
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Інформація про журнал: {{ journal.subject.name }}</title>
+    <title>Журнал: {{ journal.subject.name }} ({{ journal.group.name }})</title>
     <style>
         body {
-            background-color: #f4f4f4; /* светло-серый фон */
-            color: #333;
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #0f0f0f;
+            font-family: Arial, sans-serif;
+            color: #fff;
+        }
+
+        .navbar {
+            background-color: #1e1e1e;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .navbar-left a {
+            background-color: #3a2ff1;
+            color: white;
+            text-decoration: none;
+            padding: 12px 22px;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+        }
+
+        .navbar-left a:hover {
+            background-color: #2a1fd9;
+        }
+
+        .main {
+            padding: 30px;
         }
 
         h1 {
-            color: #333;
-            font-size: 32px;
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        h3 {
-            font-size: 18px;
-            color: #555; /* темно-серый текст */
-            margin-bottom: 10px;
+            font-size: 28px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
-            background-color: #fff; /* белый фон для таблиц */
-        }
-
-        table, th, td {
-            border: 1px solid #ddd;
+            background-color: #1e1e1e;
+            margin-top: 20px;
+            font-size: 16px;
         }
 
         th, td {
-            padding: 8px;
+            border: 1px solid #444;
+            padding: 12px 10px;
             text-align: center;
-        }
-
-        th {
-            background-color: #6a1b9a; /* фиолетовый для заголовков */
             color: #fff;
         }
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9; /* светло-серый для четных строк */
+        th {
+            background-color: #2a2a2a;
+            font-weight: bold;
+            font-size: 14px;
+            white-space: nowrap;
         }
 
-        tr:nth-child(odd) {
-            background-color: #fff; /* белый фон для нечетных строк */
+        td {
+            background-color: #1f1f1f;
         }
 
-        a {
-            color: #6a1b9a; /* фиолетовый */
-            text-decoration: none;
-            padding: 10px 20px;
-            background-color: #ddd;
-            border-radius: 5px;
-            margin-top: 20px;
-            display: inline-block;
+        tr:nth-child(even) td {
+            background-color: #2b2b2b;
         }
 
-        a:hover {
-            text-decoration: underline;
-            background-color: #ccc;
+        .tooltip {
+            font-size: 12px;
+            color: #bbb;
+            margin-top: 5px;
         }
 
-        .session-table th, .student-table th {
-            background-color: #6a1b9a; /* фиолетовый для заголовков */
+        .tooltip p {
+            margin: 2px 0;
         }
 
-        .session-table td, .student-table td {
-            background-color: #fff;
+        small {
+            color: #ccc;
         }
 
-        .session-table tr:hover, .student-table tr:hover {
-            background-color: #f2f2f2; /* светло-серый при наведении */
+        .lecturer {
+            margin-top: 30px;
+            text-align: right;
+            font-size: 16px;
+            color: #999;
         }
-
     </style>
 </head>
 <body>
-    <h1>Інформація про журнал: {{ journal.subject.name }}</h1>
-    
-    <h3>Предмет: {{ subject.name }}</h3>
-    <h3>Лектор: {{ lecturer.name }}</h3>
-    <h3>Група: {{ group.name }}</h3>
-    <h3>Макс. балів: {{ total_points }}</h3>
-    <h3>Типи сесій</h3>
-    <table class="session-table">
-        <thead>
-            <tr>
-                <th>Тип сесії</th>
-                <th>Макс. бал</th>
-                <th>Кінцевий термін</th>
-                <th>Штраф за запізнення</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for session in sessions_info %}
-                <tr>
-                    <td>{{ session.type }}</td>
-                    <td>{{ session.max_points }}</td>
-                    <td>{{ session.deadline }}</td>
-                    <td>{{ session.penalty }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    
+    <div class="navbar">
+        <div class="navbar-left">
+            <a href="{% url 'student_dashboard' %}">Усі журнали</a>
+        </div>
+    </div>
 
-    <!-- Коментарі дозволені -->
-    <h3>Коментарі дозволені: 
-        {% if comments_enabled %}
-            Так
-        {% else %}
-            Ні
-        {% endif %}
-    </h3>
+    <div class="main">
+        <h1>Журнал: {{ journal.subject.name }} ({{ journal.group.name }})</h1>
 
-    <!-- Таблиця студентів -->
-    <h3>Оцінки студентів</h3>
-    <table class="student-table">
-        <thead>
-            <tr>
-                <th>Ім’я</th>
-                {% for session in session_types %}
-                    <th>{{ session.type }}</th>
-                {% endfor %}
-                <th>Загальна оцінка</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for student in students %}
+        <table>
+            <thead>
                 <tr>
-                    <td style="text-align: left;">{{ student.name }}</td>
-                    {% for grade in student.grades %}
-                        <td>{{ grade }}</td>
+                    <th>Ім’я студента</th>
+                    {% for session in sessions %}
+                        <th class="session-header">
+                            {{ session.type }}
+                            <div class="tooltip">
+                                <p><strong>Макс:</strong> {{ session.max_points }}</p>
+                                <p><strong>Дедлайн:</strong> {{ session.deadline }}</p>
+                                <p><strong>Штраф:</strong> {{ session.penalty }}</p>
+                            </div>
+                        </th>
                     {% endfor %}
-                    <td>{{ student.total }}</td>
+                    <th>Підсумок</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for s in students %}
+                    <tr>
+                        <td>{{ s.name }}</td>
+                        {% for session in s.session_data %}
+                            <td>
+                                {{ session.grade }}
+                                {% if journal.comments_enabled and session.comment %}
+                                    <br><small><em>{{ session.comment }}</em></small>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                        <td>{{ s.total }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-    <a href="{% url 'student_dashboard' %}">Назад до кабінету студента</a>
+        <div class="lecturer">
+            Викладач: {{ journal.lecturer.name }}
+        </div>
+    </div>
 </body>
 </html>

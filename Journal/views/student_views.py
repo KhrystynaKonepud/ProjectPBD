@@ -9,7 +9,6 @@ def student_dashboard(request):
 
     student = Students.objects(id=student_id).first()
 
-    # Ищем все журналы, в которых присутствует данный студент
     student_journals = Journal.objects.filter(students__student_id=student_id)
 
     return render(request, 'student_dashboard.html', {

@@ -5,73 +5,81 @@
     <title>Кабінет студента</title>
     <style>
         body {
-            margin: 0;
-            padding: 0;
             background-color: #0f0f0f;
+            color: white;
             font-family: Arial, sans-serif;
-            color: #fff;
+            padding: 40px;
         }
 
-        .navbar {
+        .navbar a.button-grey {
+            background-color: #333;
+            color: white;
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
             background-color: #1e1e1e;
-            padding: 10px 30px;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-        }
-
-        .main {
-            text-align: center;
-            padding: 60px 20px;
+            padding: 20px;
+            border-radius: 14px;
         }
 
         h1 {
-            font-size: 32px;
-            margin-bottom: 40px;
+            text-align: center;
+            margin-bottom: 25px;
         }
 
-        p {
-            font-size: 18px;
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 15px;
         }
 
-        .subject-container {
-            margin-top: 20px;
+        .btn {
+            background-color: #3a2ff1;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: #2a1fd9;
+        }
+
+        .navbar {
+            margin-bottom: 30px;
         }
 
         .subject {
-            background-color: #1e1e1e;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            transition: background-color 0.3s;
+            margin-bottom: 20px;
         }
 
-        .subject:hover {
-            background-color: #333333;
+        .logout-btn {
+            margin-top: 40px;
+            display: inline-block;
         }
 
-        .subject h4 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .sub-footer {
-            background-color: #6a1b9a; /* фиолетовый фон */
+        .subject-link {
+            display: block;
             padding: 10px;
+            background-color: #333;
+            color: white;
             border-radius: 8px;
-            margin-top: 10px;
-            font-size: 14px;
-            text-align: center;
-            color: #fff; /* белый текст */
-        }
-
-        a {
-            color: #fff; /* белый текст для ссылки */
+            font-size: 18px;
             text-decoration: none;
+            margin-bottom: 15px;
+            font-weight: bold;
         }
 
-        a:hover {
-            text-decoration: underline;
+        .subject-link:hover {
+            background-color: #444;
         }
     </style>
 </head>
@@ -79,23 +87,21 @@
     <h1>Вітаємо, {{ student.name }}!</h1>
     <p>Email: {{ student.email }}</p>
 
-    <!-- Список усіх журналів студента -->
     {% if student_journals %}
-        <h3>Ваші предмети:</h3>
-        <div class="subject-container">
-            {% for journal in student_journals %}
-                <div class="subject">
-                    <h4>Предмет: {{ journal.subject.name }}</h4>
-                    <div class="sub-footer">
-                        <a href="{% url 'journal_detail' journal.id %}">Переглянути журнал</a>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+    <h3>Ваші предмети:</h3>
+    <div class="subject-container">
+        {% for journal in student_journals %}
+            <div class="subject">
+                <a href="{% url 'journal_detail' journal.id %}" class="subject-link">
+                    {{ journal.subject.name }} — {{ journal.group.name }} — {{ journal.lecturer.name }}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
     {% else %}
-        <p>Ви не маєте жодного журналу.</p>
+    <p>Ви не маєте жодного журналу.</p>
     {% endif %}
 
-    <a href="{% url 'logout' %}">Вийти</a>
+    <a href="{% url 'logout' %}" class="btn logout-btn">Вийти</a>
 </body>
 </html>
