@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Журнал: {{ journal.subject.name }} ({{ journal.group.name }})</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #000;
+            text-align: center;
+            padding: 8px;
+            position: relative;
+        }
+        th.session-header:hover .tooltip {
+            display: block;
+        }
+        .tooltip {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            color: #333;
+            padding: 8px;
+            border: 1px solid #ccc;
+            z-index: 100;
+            width: 200px;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+        }
+        .comment-field {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 5px;
+            top: 100%;
+            left: 0;
+            z-index: 200;
+        }
+        td:hover .comment-field {
+            display: block;
+        }
+        input[type="number"] {
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'lecturer_dashboard' %}">Головна</a> |
+        <a href="{% url 'logout' %}">Вийти</a>
+    </nav>
+
+    <h1>Журнал: {{ journal.subject.name }} ({{ journal.group.name }})</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Ім’я студента</th>
+                    {% for session in sessions %}
+                        <th class="session-header">
+                            {{ session.type }}
+                            <div class="tooltip">
+                                <p><strong>Макс:</strong> {{ session.max_points }}</p>
+                                <p><strong>Дедлайн:</strong> {{ session.deadline }}</p>
+                                <p><strong>Штраф:</strong> {{ session.penalty }}</p>
+                            </div>
+                        </th>
+                    {% endfor %}
+                    <th>Підсумок</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in students %}
+                    <tr>
+                        <td>{{ s.name }}</td>
+                        {% for session in s.session_data %}
+                            <td>
+                                <input type="number" name="{{ session.grade_name }}" value="{{ session.grade }}" min="0" max="{{ session.max_point }}">
+                                {% if journal.comments_enabled %}
+                                    <div class="comment-field">
+                                        <textarea name="{{ session.comment_name }}" placeholder="Коментар">{{ session.comment }}</textarea>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                        <td>{{ s.total }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <button type="submit">💾 Зберегти зміни</button>
+    </form>
+
+    <p><a href="{% url 'lecturer_dashboard' %}">← Назад на головну</a></p>
+</body>
+</html>
