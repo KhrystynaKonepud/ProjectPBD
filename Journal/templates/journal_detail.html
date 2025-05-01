@@ -1,0 +1,168 @@
+<!-- <!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Інформація про журнал</title>
+</head>
+<body>
+    <h1>Інформація про журнал: {{ journal.subject.name }}</h1>
+    <p>Предмет: {{ journal.subject.name }}</p>
+    <p>Кількість студентів: {{ journal.students.count }}</p>
+    <p>Інші деталі: {{ journal.details }}</p>
+
+    
+    <a href="{% url 'student_dashboard' %}">Назад до кабінету студента</a>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Інформація про журнал: {{ journal.subject.name }}</title>
+    <style>
+        body {
+            background-color: #f4f4f4; /* светло-серый фон */
+            color: #333;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 32px;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        h3 {
+            font-size: 18px;
+            color: #555; /* темно-серый текст */
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #fff; /* белый фон для таблиц */
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #6a1b9a; /* фиолетовый для заголовков */
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9; /* светло-серый для четных строк */
+        }
+
+        tr:nth-child(odd) {
+            background-color: #fff; /* белый фон для нечетных строк */
+        }
+
+        a {
+            color: #6a1b9a; /* фиолетовый */
+            text-decoration: none;
+            padding: 10px 20px;
+            background-color: #ddd;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        a:hover {
+            text-decoration: underline;
+            background-color: #ccc;
+        }
+
+        .session-table th, .student-table th {
+            background-color: #6a1b9a; /* фиолетовый для заголовков */
+        }
+
+        .session-table td, .student-table td {
+            background-color: #fff;
+        }
+
+        .session-table tr:hover, .student-table tr:hover {
+            background-color: #f2f2f2; /* светло-серый при наведении */
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Інформація про журнал: {{ journal.subject.name }}</h1>
+    
+    <h3>Предмет: {{ subject.name }}</h3>
+    <h3>Лектор: {{ lecturer.name }}</h3>
+    <h3>Група: {{ group.name }}</h3>
+    <h3>Макс. балів: {{ total_points }}</h3>
+    <h3>Типи сесій</h3>
+    <table class="session-table">
+        <thead>
+            <tr>
+                <th>Тип сесії</th>
+                <th>Макс. бал</th>
+                <th>Кінцевий термін</th>
+                <th>Штраф за запізнення</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for session in sessions_info %}
+                <tr>
+                    <td>{{ session.type }}</td>
+                    <td>{{ session.max_points }}</td>
+                    <td>{{ session.deadline }}</td>
+                    <td>{{ session.penalty }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+
+    <!-- Коментарі дозволені -->
+    <h3>Коментарі дозволені: 
+        {% if comments_enabled %}
+            Так
+        {% else %}
+            Ні
+        {% endif %}
+    </h3>
+
+    <!-- Таблиця студентів -->
+    <h3>Оцінки студентів</h3>
+    <table class="student-table">
+        <thead>
+            <tr>
+                <th>Ім’я</th>
+                {% for session in session_types %}
+                    <th>{{ session.type }}</th>
+                {% endfor %}
+                <th>Загальна оцінка</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+                <tr>
+                    <td style="text-align: left;">{{ student.name }}</td>
+                    {% for grade in student.grades %}
+                        <td>{{ grade }}</td>
+                    {% endfor %}
+                    <td>{{ student.total }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'student_dashboard' %}">Назад до кабінету студента</a>
+</body>
+</html>

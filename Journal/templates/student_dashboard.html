@@ -3,10 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <title>Кабінет студента</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f0f0f;
+            font-family: Arial, sans-serif;
+            color: #fff;
+        }
+
+        .navbar {
+            background-color: #1e1e1e;
+            padding: 10px 30px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .main {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 40px;
+        }
+
+        p {
+            font-size: 18px;
+        }
+
+        .subject-container {
+            margin-top: 20px;
+        }
+
+        .subject {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: background-color 0.3s;
+        }
+
+        .subject:hover {
+            background-color: #333333;
+        }
+
+        .subject h4 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .sub-footer {
+            background-color: #6a1b9a; /* фиолетовый фон */
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 14px;
+            text-align: center;
+            color: #fff; /* белый текст */
+        }
+
+        a {
+            color: #fff; /* белый текст для ссылки */
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <h1>Вітаємо, {{ student.name }}!</h1>
     <p>Email: {{ student.email }}</p>
+
+    <!-- Список усіх журналів студента -->
+    {% if student_journals %}
+        <h3>Ваші предмети:</h3>
+        <div class="subject-container">
+            {% for journal in student_journals %}
+                <div class="subject">
+                    <h4>Предмет: {{ journal.subject.name }}</h4>
+                    <div class="sub-footer">
+                        <a href="{% url 'journal_detail' journal.id %}">Переглянути журнал</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Ви не маєте жодного журналу.</p>
+    {% endif %}
+
     <a href="{% url 'logout' %}">Вийти</a>
 </body>
 </html>
