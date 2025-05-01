@@ -16,6 +16,13 @@ from bson import ObjectId
 from bson.dbref import DBRef
 from mongoengine.base import get_document
 from mongoengine.queryset.visitor import Q
+from Journal.models.journal import Journal
+from mongoengine.errors import DoesNotExist
+from django.http import Http404
+from mongoengine.connection import get_db
+from Journal.models.groups import Groups as Group
+
+
 
 
 
@@ -25,8 +32,6 @@ def admin_dashboard(request):
 def admin_users(request):
     return render(request, 'admin_panel/users.html')
 
-def admin_journals(request):
-    return render(request, 'admin_panel/admin_journals.html')
 
 
 
@@ -288,3 +293,58 @@ def admin_add_group(request):
             return redirect('admin_groups')  # Повертає на список груп
 
     return render(request, 'admin_panel/add_group.html')
+
+def admin_journal(request):
+    journals = Journal.objects.all()
+    return render(request, 'admin_panel/journals.html', {'journals': journals})
+
+
+def admin_view_journal(request, journal_id):
+    if request.session.get('role') != 'admin':
+        return redirect('login')
+
+    try:
+        journal = Journal.objects.get(id=ObjectId(journal_id))
+    except Journal.DoesNotExist:
+        raise Http404("Журнал не знайдено")
+
+    # Підготовка інформації про сесії
+    sessions = []
+    for i in range(len(journal.session_types)):
+        sessions.append({
+            'type': journal.session_types[i],
+            'max_points': journal.max_points_per_session[i] if i < len(journal.max_points_per_session) else None,
+            'deadline': journal.deadlines[i] if i < len(journal.deadlines) else None,
+            'penalty': journal.late_penalties[i] if i < len(journal.late_penalties) else None,
+        })
+
+    # Підготовка інформації про студентів
+    students = []
+    for s in journal.students:
+        session_data = []
+        for i in range(len(s.grades)):
+            session_data.append({
+                'grade': s.grades[i],
+                'comment': s.comments[i] if i < len(s.comments) else '',
+                'max_point': journal.max_points_per_session[i] if i < len(journal.max_points_per_session) else '',
+            })
+        students.append({
+            'name': s.name,
+            'total': s.total,
+            'session_data': session_data,
+        })
+
+    # Отримання імені викладача
+    lecturer = None
+    try:
+        lecturer_obj = Lecturer.objects.get(id=journal.lecturer.id)
+        lecturer = lecturer_obj.name
+    except Lecturer.DoesNotExist:
+        lecturer = "Невідомий викладач"
+
+    return render(request, 'admin_panel/view_journal.html', {
+        'journal': journal,
+        'sessions': sessions,
+        'students': students,
+        'lecturer_name': lecturer,
+    })

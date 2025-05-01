@@ -3,7 +3,7 @@ from Journal.views.admin_views import (
     admin_dashboard,
     admin_users,
     admin_groups,
-    admin_journals,
+    admin_journal,
     admin_subjects,
     admin_profile,
     edit_admin_profile,
@@ -13,7 +13,8 @@ from Journal.views.admin_views import (
     admin_add_group,
     admin_subject_detail,
     admin_delete_subject,
-    admin_add_subject
+    admin_add_subject,
+    admin_view_journal
 )
 from Journal.views.lecturer_views import lecturer_dashboard
 from Journal.views.lecturer_views import create_journal
@@ -32,7 +33,7 @@ urlpatterns = [
     path('admin/dashboard/', admin_dashboard, name='admin_dashboard'),
     path('admin/users/', admin_users, name='admin_users'),
     path('admin/groups/', admin_groups, name='admin_groups'),
-    path('admin/journals/', admin_journals, name='manage_journals'),
+ #   path('admin/journals/', admin_journals, name='manage_journals'),
 
 
     path('admin/subjects/', admin_subjects, name='admin_subjects'),
@@ -47,6 +48,9 @@ urlpatterns = [
     path('admin/groups/add/', admin_add_group, name='add_group'),
 
     path('admin/groups/<str:group_id>/', admin_group_detail, name='group_detail'),
+
+    path('admin/journals/', admin_journal, name='admin_journal'),
+    path('admin/journal/<str:journal_id>/', admin_view_journal, name='admin_view_journal'),
 
 
     path('admin/user/<str:email>/', user_detail, name='user_detail'),
