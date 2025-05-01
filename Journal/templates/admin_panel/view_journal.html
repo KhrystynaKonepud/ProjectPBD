@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Журнал: {{ journal.subject.name }} ({{ journal.group.name }})</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f0f0f;
+            font-family: Arial, sans-serif;
+            color: #fff;
+        }
+
+        .navbar {
+            background-color: #1e1e1e;
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-left, .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .navbar a.button-blue {
+            background-color: #3a2ff1;
+            color: white;
+        }
+
+        .navbar a.button-blue:hover {
+            background-color: #2a1fd9;
+        }
+
+        .navbar a.button-grey {
+            background-color: #333;
+            color: white;
+        }
+
+        .main {
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .info {
+            margin-bottom: 25px;
+            font-size: 18px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #1e1e1e;
+            color: #fff;
+        }
+
+        th, td {
+            border: 1px solid #444;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #2a2a2a;
+        }
+
+        tr:nth-child(even) {
+            background-color: #2b2b2b;
+        }
+
+        .no-data {
+            margin-top: 20px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-left">
+            <a href="{% url 'admin_journal' %}" class="button-blue">Усі журнали</a>
+        </div>
+    </div>
+
+    <h1>Журнал: {{ journal.subject.name }} ({{ journal.group.name }})</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Ім’я студента</th>
+                {% for session in sessions %}
+                    <th class="session-header">
+                        {{ session.type }}
+                        <div class="tooltip">
+                            <p><strong>Макс:</strong> {{ session.max_points }}</p>
+                            <p><strong>Дедлайн:</strong> {{ session.deadline }}</p>
+                            <p><strong>Штраф:</strong> {{ session.penalty }}</p>
+                        </div>
+                    </th>
+                {% endfor %}
+                <th>Підсумок</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in students %}
+                <tr>
+                    <td>{{ s.name }}</td>
+                    {% for session in s.session_data %}
+                        <td>
+                            {{ session.grade }}
+                            {% if journal.comments_enabled and session.comment %}
+                                <br><small><em>{{ session.comment }}</em></small>
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                    <td>{{ s.total }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div style="margin-top: 30px; text-align: right; font-size: 16px; color: #ccc;">
+        Викладач: {{ journal.lecturer.name }}
+    </div>
+
+</body>
+</html>
