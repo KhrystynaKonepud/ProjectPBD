@@ -22,6 +22,7 @@ from Journal.views.lecturer_views import view_journal
 from Journal.views.lecturer_views import delete_journal
 from Journal.views.student_views import student_dashboard
 from Journal.views.auth_views import index, universal_login, logout_view
+from Journal.views.journal_detail_view import journal_detail
 
 urlpatterns = [
     path('', index, name='index'),
@@ -60,4 +61,5 @@ urlpatterns = [
     path('lecturer/journal/<str:journal_id>/', view_journal, name='view_journal'),
     path('student/dashboard/', student_dashboard, name='student_dashboard'),
     path('lecturer/journal/<str:journal_id>/delete/', delete_journal, name='delete_journal'),
+    path('student/journal/<str:journal_id>/', journal_detail, name='journal_detail'),
 ]
