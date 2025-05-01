@@ -342,6 +342,8 @@ def admin_view_journal(request, journal_id):
     except Lecturer.DoesNotExist:
         lecturer = "Невідомий викладач"
 
+    students.sort(key=lambda x: x['name'].lower())
+
     return render(request, 'admin_panel/view_journal.html', {
         'journal': journal,
         'sessions': sessions,
