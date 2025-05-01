@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Додати користувача</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+        .form-container {
+            background-color: #111;
+            padding: 30px;
+            border-radius: 12px;
+            width: 400px;
+            margin: auto;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-field {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ccc;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: none;
+        }
+        .btn-submit {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            background-color: #3a3aff;
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Додати користувача</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-field">
+                <label>Ім'я</label>
+                <input type="text" name="name" required>
+            </div>
+            <div class="form-field">
+                <label>Email</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-field">
+                <label>Пароль</label>
+                <input type="password" name="password" required>
+            </div>
+            <div class="form-field">
+                <label>Роль</label>
+                <select name="role" required>
+                    <option value="student">Студент</option>
+                    <option value="lecturer">Викладач</option>
+                    <option value="admin">Адміністратор</option>
+                </select>
+            </div>
+            <!-- поле групи не обов'язкове -->
+            <div class="form-field">
+                <label>Група (необов'язково)</label>
+                <input type="text" name="group">
+            </div>
+            <button type="submit" class="btn-submit">Додати</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Інформація про користувача</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+        .card {
+            background-color: #111;
+            padding: 30px;
+            border-radius: 12px;
+            width: 400px;
+            margin: auto;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .field {
+            margin: 10px 0;
+        }
+        .label {
+            font-weight: bold;
+            color: #ccc;
+        }
+        .back-button {
+            margin-top: 30px;
+            display: block;
+            text-align: center;
+        }
+        .back-button button {
+            background-color: #3a3aff;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>{{ user.name }}</h2>
+
+    {% if user.email %}
+    <div class="field">
+        <span class="label">Email:</span> {{ user.email }}
+    </div>
+    {% endif %}
+
+    {% if user.group %}
+    <div class="field">
+        <span class="label">Група:</span> {{ user.group }}
+    </div>
+    {% endif %}
+
+    {% if user.subjects %}
+    <div class="field">
+        <span class="label">Предмети:</span>
+        {% for subject in user.subjects %}
+            {{ subject }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="back-button">
+        <button onclick="window.location.href='/admin/users/'">Назад до списку</button>
+    </div>
+</div>
+
+</body>
+</html>

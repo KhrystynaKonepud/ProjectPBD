@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Користувачі</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f0f0f;
+            font-family: Arial, sans-serif;
+            color: #fff;
+        }
+
+        .navbar {
+            background-color: #1e1e1e;
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-left, .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .navbar a.button-blue {
+            background-color: #3a2ff1;
+            color: white;
+        }
+
+        .navbar a.button-blue:hover {
+            background-color: #2a1fd9;
+        }
+
+        .navbar a.button-grey {
+            background-color: #333;
+            color: white;
+        }
+
+        .navbar input[type="text"] {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .main {
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .columns {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .column {
+            flex: 1;
+            background-color: #1b1b1b;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 0 10px rgba(255,255,255,0.05);
+        }
+
+        .column h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 6px;
+        }
+
+        .user-entry {
+            margin-bottom: 14px;
+            background-color: #2b2b2b;
+            padding: 10px;
+            border-radius: 10px;
+            transition: background-color 0.2s ease;
+        }
+
+        .user-entry:hover {
+            background-color: #3a3a3a;
+        }
+
+        .user-entry a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+        }
+
+        .user-entry small {
+            color: #aaa;
+        }
+
+        .no-users {
+            margin-top: 20px;
+            color: #888;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="navbar-left">
+            <a href="{% url 'admin_dashboard' %}" class="button-blue">Головна</a>
+            <a href="{% url 'add_user' %}" class="button-blue">Додати користувача</a>
+        </div>
+        <div class="navbar-right">
+            <form method="GET" action="">
+                <input type="text" name="q" placeholder="Пошук за email">
+                <button type="submit" class="button-blue">Пошук</button>
+            </form>
+            <a href="{% url 'admin_profile' %}" class="button-grey">Профіль</a>
+        </div>
+    </div>
+
+    <div class="main">
+        <h1>Список користувачів</h1>
+
+        <div class="columns">
+            <div class="column">
+                <h2>Студенти</h2>
+                {% for student in students %}
+                    <div class="user-entry">
+                        <a href="{% url 'user_detail' student.email %}">
+                            {{ student.name }}<br>
+                            <small>{{ student.email }}</small>
+                        </a>
+                    </div>
+                {% empty %}
+                    <p class="no-users">Немає студентів.</p>
+                {% endfor %}
+            </div>
+
+            <div class="column">
+                <h2>Викладачі</h2>
+                {% for lecturer in lecturers %}
+                    <div class="user-entry">
+                        <a href="{% url 'user_detail' lecturer.email %}">
+                            {{ lecturer.name }}<br>
+                            <small>{{ lecturer.email }}</small>
+                        </a>
+                    </div>
+                {% empty %}
+                    <p class="no-users">Немає викладачів.</p>
+                {% endfor %}
+            </div>
+
+            <div class="column">
+                <h2>Адміністратори</h2>
+                {% for admin in admins %}
+                    <div class="user-entry">
+                        <a href="{% url 'user_detail' admin.email %}">
+                            {{ admin.name }}<br>
+                            <small>{{ admin.email }}</small>
+                        </a>
+                    </div>
+                {% empty %}
+                    <p class="no-users">Немає адміністраторів.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

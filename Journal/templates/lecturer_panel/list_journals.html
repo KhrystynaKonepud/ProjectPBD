@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Мої журнали</title>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'lecturer_dashboard' %}">Головна</a> |
+        <a href="{% url 'create_journal' %}">➕ Створити новий</a> |
+        <a href="{% url 'logout' %}">Вийти</a>
+    </nav>
+
+    <h1>Мої журнали</h1>
+    <ul>
+        {% for journal in journals %}
+            <li>
+                <a href="{% url 'view_journal' journal.id %}">
+                    {{ journal.subject.name }} — {{ journal.group.name }}
+                </a>
+            </li>
+        {% empty %}
+            <li>У вас ще немає жодного журналу.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

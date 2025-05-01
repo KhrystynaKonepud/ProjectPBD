@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ subject.name }}</title>
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .section {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 14px;
+        }
+
+        .teacher {
+            background-color: #2b2b2b;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .btn-blue {
+            background-color: #3a2ff1;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn-blue:hover {
+            background-color: #2a1fd9;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{% url 'admin_subjects' %}" class="btn-blue">Назад</a>
+    </div>
+
+    <h1>{{ subject.name }}</h1>
+
+    <div class="section">
+        <h3>Опис дисципліни:</h3>
+        <p>{{ subject.description|default:"Опис відсутній." }}</p>
+
+        <hr>
+
+        <h2>Викладачі:</h2>
+        {% if subject.lecturer %}
+            {% for lec in subject.lecturer %}
+                <div class="teacher">
+                    {{ lec.name }}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Викладачі не призначені.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
