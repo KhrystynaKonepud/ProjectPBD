@@ -2,10 +2,112 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Журнали</title>
+    <title>Усі журнали</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f0f0f;
+            font-family: Arial, sans-serif;
+            color: #fff;
+        }
+
+        .navbar {
+            background-color: #1e1e1e;
+            padding: 10px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-left, .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .navbar a.button-blue {
+            background-color: #3a2ff1;
+            color: white;
+        }
+
+        .navbar a.button-blue:hover {
+            background-color: #2a1fd9;
+        }
+
+        .navbar a.button-grey {
+            background-color: #333;
+            color: white;
+        }
+
+        .main {
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .journal-entry {
+            margin-bottom: 14px;
+            background-color: #2b2b2b;
+            padding: 12px 18px;
+            border-radius: 10px;
+            transition: background-color 0.2s ease;
+        }
+
+        .journal-entry:hover {
+            background-color: #3a3a3a;
+        }
+
+        .journal-entry a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+        }
+
+        .no-journals {
+            margin-top: 20px;
+            color: #888;
+        }
+    </style>
 </head>
 <body>
-    <h2>Сторінка управління журналами</h2>
-    <a href="{% url 'admin_dashboard' %}">← Назад до панелі</a>
+
+    <div class="navbar">
+        <div class="navbar-left">
+            <a href="{% url 'admin_dashboard' %}" class="button-blue">Головна</a>
+        </div>
+        <div class="navbar-right">
+            <form method="GET" action="">
+                <input type="text" name="q" placeholder="Пошук">
+                <button type="submit" class="button-blue">Пошук</button>
+            </form>
+            <a href="#" class="button-grey">Профіль</a>
+        </div>
+    </div>
+
+    <div class="main">
+        <h1>Усі журнали</h1>
+        {% for journal in journals %}
+            <div class="journal-entry">
+                <a href="{% url 'admin_view_journal' journal.id %}">
+                    {{ journal.subject.name }} — {{ journal.group.name }} — {{ journal.lecturer.name }}
+                </a>
+            </div>
+        {% empty %}
+            <p class="no-journals">Немає журналів в базі даних</p>
+        {% endfor %}
+    </div>
+
 </body>
 </html>
+
