@@ -3,11 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <title>Мої журнали</title>
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 14px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            background-color: #3a2ff1;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background-color: #2a1fd9;
+        }
+
+        .navbar {
+            margin-bottom: 30px;
+        }
+
+        .button-back {
+            background-color: #3a2ff1;
+            color: white;
+            padding: 8px 14px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .button-back:hover {
+            background-color: #2a1fd9;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            margin-bottom: 18px;
+        }
+
+        li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        li a:hover {
+            text-decoration: underline;
+        }
+
+        nav {
+            margin-bottom: 30px;
+        }
+
+        nav a {
+            margin-right: 10px;
+            text-decoration: none;
+            color: white;
+            background-color: #3a2ff1;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            background-color: #2a1fd9;
+        }
+    </style>
 </head>
 <body>
     <nav>
-        <a href="{% url 'lecturer_dashboard' %}">Головна</a> |
-        <a href="{% url 'create_journal' %}">➕ Створити новий</a> |
+        <a href="{% url 'lecturer_dashboard' %}">Головна</a>
+        <a href="{% url 'create_journal' %}">Створити новий</a>
         <a href="{% url 'logout' %}">Вийти</a>
     </nav>
 

@@ -3,15 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <title>Кабінет викладача</title>
+
+    <style>
+        body {
+            background-color: #0f0f0f;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 14px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 15px;
+            background-color: #2c2c2c;
+            color: white;
+        }
+
+        select[multiple] {
+            height: 120px;
+        }
+
+        .btn {
+            background-color: #3a2ff1;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background-color: #2a1fd9;
+        }
+
+        .navbar {
+            margin-bottom: 30px;
+        }
+
+        .button-back {
+            background-color: #3a2ff1;
+            color: white;
+            padding: 8px 14px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .button-back:hover {
+            background-color: #2a1fd9;
+        }
+
+        /* Додано: стилізація списку журналів */
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            margin-bottom: 18px;
+        }
+
+        li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        li a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <h1>Вітаємо, {{ lecturer.name }}!</h1>
     <p>Email: {{ lecturer.email }}</p>
 
-    <nav>
-        <a href="{% url 'lecturer_dashboard' %}">Головна</a> |
-        <a href="{% url 'create_journal' %}">➕ Створити новий журнал</a> |
-        <a href="{% url 'logout' %}">Вийти</a>
+    <nav class="navbar">
+        <a href="{% url 'lecturer_dashboard' %}" class="button-back">Головна</a>
+        <a href="{% url 'create_journal' %}" class="button-back">Створити новий журнал</a>
+        <a href="{% url 'logout' %}" class="button-back">Вийти</a>
     </nav>
 
     <hr>
@@ -26,14 +114,14 @@
 
             <form action="{% url 'delete_journal' journal.id %}" method="post" style="display:inline;">
                 {% csrf_token %}
-                <button type="submit" onclick="return confirm('Ви впевнені, що хочете видалити цей журнал?');">
-                    🗑 Видалити
+                <button type="submit" class="btn" onclick="return confirm('Ви впевнені, що хочете видалити цей журнал?');">
+                    Видалити
                 </button>
             </form>
         </li>
     {% empty %}
         <li>У вас ще немає жодного журналу.</li>
     {% endfor %}
-</ul>
+    </ul>
 </body>
 </html>

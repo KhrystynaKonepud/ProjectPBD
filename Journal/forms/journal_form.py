@@ -9,7 +9,7 @@ class JournalForm(forms.Form):
     session_types = forms.CharField(
         label="Типи занять (через кому)",
         required=False,
-        help_text="Наприклад: лекція, практика, лаба"
+        help_text="Наприклад: ЛР, ПР, МКР"
     )
     max_points_per_session = forms.CharField(
         label="Макс. бали за заняття (через кому)",
@@ -24,7 +24,7 @@ class JournalForm(forms.Form):
     late_penalties = forms.CharField(
         label="Штрафи за запізнення (через кому)",
         required=False,
-        help_text="Наприклад: 0.1,0.2"
+        help_text="Наприклад: 1, 2, 0.5"
     )
     comments_enabled = forms.BooleanField(label="Дозволити коментарі", required=False)
 
