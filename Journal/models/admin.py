@@ -10,3 +10,4 @@ class Admin(Document):
 
     def __str__(self):
         return self.name
+
