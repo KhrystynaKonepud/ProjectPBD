@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from Journal.models.students import Students
+from Journal.models.journal import Journal
 
 def student_dashboard(request):
     student_id = request.session.get('user_id')
@@ -7,4 +8,11 @@ def student_dashboard(request):
         return redirect('login')
 
     student = Students.objects(id=student_id).first()
-    return render(request, 'student_dashboard.html', {'student': student})
+
+    # Ищем все журналы, в которых присутствует данный студент
+    student_journals = Journal.objects.filter(students__student_id=student_id)
+
+    return render(request, 'student_dashboard.html', {
+        'student': student,
+        'student_journals': student_journals,
+    })
