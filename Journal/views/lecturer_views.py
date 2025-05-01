@@ -5,6 +5,8 @@ from Journal.forms.journal_form import JournalForm
 from django.contrib import messages
 from django.http import Http404
 from bson import ObjectId
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.http import require_POST
 
 
 def lecturer_dashboard(request):
@@ -90,6 +92,7 @@ def list_journals(request):
     })
 
 
+@csrf_protect
 def view_journal(request, journal_id):
     lecturer_id = request.session.get('user_id')
     if not lecturer_id or request.session.get('role') != 'lecturer':
@@ -104,7 +107,30 @@ def view_journal(request, journal_id):
     except Journal.DoesNotExist:
         raise Http404("Журнал не знайдено або у вас немає до нього доступу.")
 
-    # Підготовка списку сесій з об'єднаними даними
+    if request.method == 'POST':
+        for i, student in enumerate(journal.students):
+            total = 0
+            for j in range(len(journal.session_types)):
+                grade_key = f'student_{i}_grade_{j}'
+                comment_key = f'student_{i}_comment_{j}'
+                try:
+                    grade = int(request.POST.get(grade_key, 0))
+                except ValueError:
+                    grade = 0
+                comment = request.POST.get(comment_key, "")
+
+                student.grades[j] = grade
+                if journal.comments_enabled and j < len(student.comments):
+                    student.comments[j] = comment
+
+                total += grade
+
+            student.total = total
+
+        journal.save()
+        messages.success(request, "Зміни успішно збережено!")
+        return redirect('view_journal', journal_id=journal_id)
+
     sessions = []
     for i in range(len(journal.session_types)):
         sessions.append({
@@ -114,21 +140,24 @@ def view_journal(request, journal_id):
             'penalty': journal.late_penalties[i] if i < len(journal.late_penalties) else None,
         })
 
-    # Підготовка студентів з детальною інформацією по кожній сесії
     students = []
-    for s in journal.students:
+    for idx, s in enumerate(journal.students):
         session_data = []
         for i in range(len(s.grades)):
             session_data.append({
                 'grade': s.grades[i],
                 'comment': s.comments[i] if i < len(s.comments) else '',
                 'max_point': journal.max_points_per_session[i] if i < len(journal.max_points_per_session) else '',
+                'grade_name': f'student_{idx}_grade_{i}',
+                'comment_name': f'student_{idx}_comment_{i}',
             })
         students.append({
             'name': s.name,
             'total': s.total,
             'session_data': session_data,
         })
+
+    students.sort(key=lambda x: x['name'].lower())
 
     return render(request, 'lecturer_panel/view_journal.html', {
         'journal': journal,
@@ -137,6 +166,17 @@ def view_journal(request, journal_id):
     })
 
 
+@require_POST
+def delete_journal(request, journal_id):
+    lecturer_id = request.session.get('user_id')
+    if not lecturer_id or request.session.get('role') != 'lecturer':
+        return redirect('login')
 
+    try:
+        journal = Journal.objects.get(id=ObjectId(journal_id), lecturer=lecturer_id)
+        journal.delete()
+        messages.success(request, "Журнал успішно видалено.")
+    except Journal.DoesNotExist:
+        messages.error(request, "Журнал не знайдено або у вас немає прав на його видалення.")
 
-
+    return redirect('lecturer_dashboard')
