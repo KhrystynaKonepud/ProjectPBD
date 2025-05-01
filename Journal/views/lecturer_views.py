@@ -7,6 +7,7 @@ from django.http import Http404
 from bson import ObjectId
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_POST
+from datetime import datetime
 
 
 def lecturer_dashboard(request):
@@ -112,16 +113,32 @@ def view_journal(request, journal_id):
             total = 0
             for j in range(len(journal.session_types)):
                 grade_key = f'student_{i}_grade_{j}'
+                date_key = f'student_{i}_grade_{j}_date'
                 comment_key = f'student_{i}_comment_{j}'
+
+                grade_str = request.POST.get(grade_key, "0")
+                date_str = request.POST.get(date_key, "")
+                penalty = journal.late_penalties[j] if j < len(journal.late_penalties) else 0
+                deadline = journal.deadlines[j] if j < len(journal.deadlines) else None
+
                 try:
-                    grade = int(request.POST.get(grade_key, 0))
+                    grade = int(grade_str)
                 except ValueError:
                     grade = 0
-                comment = request.POST.get(comment_key, "")
+
+                try:
+                    submitted_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+                except (ValueError, TypeError):
+                    submitted_date = None
+
+                if deadline and submitted_date and submitted_date > deadline:
+                    grade -= int(penalty)
+                    grade = max(0, grade)
 
                 student.grades[j] = grade
+
                 if journal.comments_enabled and j < len(student.comments):
-                    student.comments[j] = comment
+                    student.comments[j] = request.POST.get(comment_key, "")
 
                 total += grade
 
@@ -150,6 +167,7 @@ def view_journal(request, journal_id):
                 'max_point': journal.max_points_per_session[i] if i < len(journal.max_points_per_session) else '',
                 'grade_name': f'student_{idx}_grade_{i}',
                 'comment_name': f'student_{idx}_comment_{i}',
+                'date_name': f'student_{idx}_grade_{i}_date',
             })
         students.append({
             'name': s.name,

@@ -83,6 +83,7 @@
                         {% for session in s.session_data %}
                             <td>
                                 <input type="number" name="{{ session.grade_name }}" value="{{ session.grade }}" min="0" max="{{ session.max_point }}">
+                                <input type="date" name="{{ session.grade_name }}_date">
                                 {% if journal.comments_enabled %}
                                     <div class="comment-field">
                                         <textarea name="{{ session.comment_name }}" placeholder="Коментар">{{ session.comment }}</textarea>
